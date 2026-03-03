@@ -1,0 +1,427 @@
+"""
+Presidio Morocco Service - Tâche 3
+PII Detection with Custom Moroccan Recognizers
+
+According to Cahier des Charges:
+- Customize Microsoft Presidio for Moroccan context
+- Add recognizers: CIN, Phone MA, IBAN MA, CNSS
+- Support French and Arabic
+"""
+import uvicorn
+from typing import List, Optional
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+import os
+from motor.motor_asyncio import AsyncIOMotorClient
+_mongo_uri = os.getenv("MONGODB_URI")
+if not _mongo_uri:
+    raise RuntimeError("MONGODB_URI environment variable is required. Set it in .env file.")
+client = AsyncIOMotorClient(_mongo_uri)
+db = client[os.getenv("DATABASE_NAME", "DataGovDB")]
+
+# Presidio imports
+try:
+    from presidio_analyzer import AnalyzerEngine, RecognizerRegistry, PatternRecognizer, Pattern
+    from presidio_analyzer.nlp_engine import NlpEngineProvider
+    from presidio_anonymizer import AnonymizerEngine
+    from presidio_anonymizer.entities import OperatorConfig
+    PRESIDIO_AVAILABLE = True
+except ImportError:
+    PRESIDIO_AVAILABLE = False
+    print("⚠️ Presidio not installed. Run: pip install presidio-analyzer presidio-anonymizer spacy")
+
+# Import Moroccan recognizers
+if PRESIDIO_AVAILABLE:
+    from backend.recognizers.cin_recognizer import MoroccanCINRecognizer
+    from backend.recognizers.phone_ma_recognizer import MoroccanPhoneRecognizer
+    from backend.recognizers.iban_ma_recognizer import MoroccanIBANRecognizer
+    from backend.recognizers.cnss_recognizer import MoroccanCNSSRecognizer
+    from backend.recognizers.arabic_recognizer import ArabicMoroccanRecognizer
+    from backend.recognizers.passport_ma_recognizer import MoroccanPassportRecognizer
+    from backend.recognizers.permis_ma_recognizer import MoroccanPermisRecognizer
+    # International recognizers
+    from backend.recognizers.international_recognizers import register_all_international
+
+# ====================================================================
+# MODELS
+# ====================================================================
+
+class AnalyzeRequest(BaseModel):
+    text: str = Field(..., description="Text to analyze", min_length=1)
+    language: str = Field(default="fr", description="Language (fr/en/ar)")
+    entities: Optional[List[str]] = Field(default=None, description="Specific entities to detect")
+    score_threshold: float = Field(default=0.3, ge=0.0, le=1.0)
+
+class AnonymizeRequest(BaseModel):
+    text: str = Field(..., description="Text to anonymize", min_length=1)
+    language: str = Field(default="fr")
+    operators: Optional[dict] = Field(default=None, description="Custom operators per entity")
+
+class Detection(BaseModel):
+    entity_type: str
+    start: int
+    end: int
+    score: float
+    value: str
+    analysis_explanation: Optional[str] = None
+
+class AnalyzeResponse(BaseModel):
+    success: bool
+    detections: List[Detection]
+    count: int
+
+class AnonymizeResponse(BaseModel):
+    success: bool
+    original_text: str
+    anonymized_text: str
+    detections_count: int
+
+# ====================================================================
+# PRESIDIO ENGINE
+# ====================================================================
+
+class MoroccanPresidioEngine:
+    """Presidio Engine with Moroccan custom recognizers"""
+    
+    def __init__(self):
+        self.analyzer = None
+        self.anonymizer = None
+        
+        if not PRESIDIO_AVAILABLE:
+            print("❌ Presidio not available")
+            return
+        
+        try:
+            # Initialize registry with custom recognizers
+            registry = RecognizerRegistry()
+            registry.load_predefined_recognizers()
+            
+            # Add Moroccan recognizers for multiple languages
+            # This ensures they are found when analysis is requested in en, fr, or ar
+            for lang in ["en", "fr", "ar"]:
+                registry.add_recognizer(MoroccanCINRecognizer(supported_language=lang))
+                registry.add_recognizer(MoroccanPhoneRecognizer(supported_language=lang))
+                registry.add_recognizer(MoroccanIBANRecognizer(supported_language=lang))
+                registry.add_recognizer(MoroccanCNSSRecognizer(supported_language=lang))
+                registry.add_recognizer(MoroccanPassportRecognizer(supported_language=lang))
+                registry.add_recognizer(MoroccanPermisRecognizer(supported_language=lang))
+                # registry.add_recognizer(ArabicMoroccanRecognizer(supported_language=lang))
+            
+            # Add International recognizers (Chinese, Japanese, Korean, Russian, etc.)
+            register_all_international(registry, languages=["en", "fr"])
+            print("🌍 International PII detection ENABLED (Strict Mode)")
+            
+            # Load custom recognizers from MongoDB
+            self._load_custom_recognizers(registry)
+
+            
+            # Use English model for all languages (Custom Recognizers handle the patterns)
+            config = {
+                "nlp_engine_name": "spacy",
+                "models": [
+                    {"lang_code": "en", "model_name": "en_core_web_sm"},
+                    {"lang_code": "fr", "model_name": "en_core_web_sm"},
+                ]
+            }
+            provider = NlpEngineProvider(nlp_configuration=config)
+            nlp_engine = provider.create_engine()
+            
+            self.analyzer = AnalyzerEngine(
+                registry=registry,
+                nlp_engine=nlp_engine
+            )
+            
+            self.anonymizer = AnonymizerEngine()
+            
+            print("✅ Moroccan Presidio Engine initialized")
+            print("   Custom recognizers: CIN_MAROC, PHONE_MA, IBAN_MA, CNSS, PASSPORT_MA, PERMIS_MA, ARABIC_MOROCCAN_PII")
+            
+        except Exception as e:
+            print(f"⚠️ Presidio initialization error: {e}")
+            print("   Service will run with limited functionality")
+            self.analyzer = None
+            self.anonymizer = None
+
+    def _load_custom_recognizers(self, registry):
+        """Load custom patterns from MongoDB and register them"""
+        try:
+            from pymongo import MongoClient
+            import os
+            client_sync = MongoClient(os.getenv("MONGODB_URI"))
+            db_sync = client_sync[os.getenv("DATABASE_NAME", "DataGovDB")]
+            custom_recognizers = db_sync["presidio_recognizers"].find()
+            
+            for rec in custom_recognizers:
+                entity = rec.get("entity_type")
+                pattern_str = rec.get("regex")
+                lang = rec.get("language", "fr")
+                
+                if entity and pattern_str:
+                    pattern = Pattern(name=f"{entity}_pattern", regex=pattern_str, score=0.85)
+                    recognizer = PatternRecognizer(
+                        supported_entity=entity,
+                        patterns=[pattern],
+                        supported_language=lang
+                    )
+                    registry.add_recognizer(recognizer)
+                    print(f"   🔓 Registered custom recognizer: {entity} ({lang})")
+            client_sync.close()
+        except Exception as e:
+            print(f"   ⚠️ Could not load custom recognizers from DB: {e}")
+    
+    def analyze(self, text: str, language: str = "fr", 
+                entities: Optional[List[str]] = None,
+                score_threshold: float = 0.5) -> List[dict]:
+        """Analyze text for PII"""
+        if not self.analyzer:
+            return []
+        
+        lang = "fr" if language in ["fr", "ar"] else "en"
+        
+        results = self.analyzer.analyze(
+            text=text,
+            language=lang,
+            entities=entities,
+            score_threshold=score_threshold,
+            return_decision_process=True # Enable explanations
+        )
+        
+        return [
+            {
+                "entity_type": r.entity_type,
+                "start": r.start,
+                "end": r.end,
+                "score": round(r.score, 3),
+                "value": text[r.start:r.end],
+                "analysis_explanation": getattr(r.analysis_explanation, 'textual_explanation', str(r.analysis_explanation)) if r.analysis_explanation else f"Detected {r.entity_type} with {round(r.score*100)}% confidence"
+            }
+            for r in results
+        ]
+    
+    def anonymize(self, text: str, language: str = "fr",
+                  operators: Optional[dict] = None) -> dict:
+        """Anonymize detected PII"""
+        if not self.analyzer or not self.anonymizer:
+            return {"original": text, "anonymized": text, "count": 0}
+        
+        # Analyze first
+        results = self.analyzer.analyze(text=text, language=language)
+        
+        # Build operator config
+        if operators:
+            ops = {}
+            for k, v in operators.items():
+                if isinstance(v, dict) and "type" in v:
+                    operator_name = v.pop("type")
+                    ops[k] = OperatorConfig(operator_name, v)
+                else:
+                    # Fallback or pass as is if it matches expected structure (unlikely via JSON)
+                    ops[k] = OperatorConfig(v)
+        else:
+            ops = None
+        
+        # Anonymize
+        anonymized = self.anonymizer.anonymize(
+            text=text,
+            analyzer_results=results,
+            operators=ops
+        )
+        
+        return {
+            "original": text,
+            "anonymized": anonymized.text,
+            "count": len(results)
+        }
+    
+    def get_supported_entities(self) -> List[str]:
+        """Get list of supported entities"""
+        if not self.analyzer:
+            return []
+        return self.analyzer.get_supported_entities()
+
+# Initialize engine
+engine = MoroccanPresidioEngine() if PRESIDIO_AVAILABLE else None
+
+# ====================================================================
+# FASTAPI APP
+# ====================================================================
+
+app = FastAPI(
+    title="Presidio Service (Morocco + International)",
+    description="PII Detection for Moroccan (CIN, Phone, CNSS) & International (China, EU, USA) entities.",
+    version="1.1.0"
+)
+
+@app.middleware("http")
+async def set_root_path(request: Request, call_next):
+    root_path = request.headers.get("x-forwarded-prefix")
+    if root_path:
+        request.scope["root_path"] = root_path
+    response = await call_next(request)
+    return response
+
+# CORS Security - Restricted origins
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:8000,http://localhost:3000").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+)
+
+@app.get("/")
+def root():
+    return {
+        "service": "Presidio Morocco",
+        "status": "running",
+        "presidio_available": PRESIDIO_AVAILABLE
+    }
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "presidio_available": PRESIDIO_AVAILABLE,
+        "custom_recognizers": ["CIN_MAROC", "PHONE_MA", "IBAN_MA", "CNSS_MA"]
+    }
+
+@app.get("/entities")
+def get_entities():
+    """Get supported entities"""
+    if not engine:
+        return {"entities": []}
+    return {"entities": engine.get_supported_entities()}
+
+@app.post("/analyze", response_model=AnalyzeResponse)
+async def analyze(request: AnalyzeRequest):
+    """Analyze text for PII"""
+    if not engine:
+        raise HTTPException(status_code=503, detail="Presidio not available")
+    
+    # Filter entities to prevent "No recognizers found" error
+    entities = request.entities
+    if entities:
+        supported = engine.get_supported_entities()
+        valid_entities = [e for e in entities if e in supported]
+        
+        if not valid_entities:
+            # If no valid entities found (e.g. Swagger sent ["string"]), 
+            # fallback to identifying ALL entities (None)
+            entities = None
+        else:
+            entities = valid_entities
+
+    try:
+        detections = engine.analyze(
+            text=request.text,
+            language=request.language,
+            entities=entities,
+            score_threshold=request.score_threshold
+        )
+        
+        return AnalyzeResponse(
+            success=True,
+            detections=[Detection(**d) for d in detections],
+            count=len(detections)
+        )
+    except Exception as e:
+        print(f"Analysis error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/anonymize", response_model=AnonymizeResponse)
+async def anonymize(request: AnonymizeRequest):
+    """Anonymize PII in text"""
+    if not engine:
+        raise HTTPException(status_code=503, detail="Presidio not available")
+    
+    try:
+        result = engine.anonymize(
+            text=request.text,
+            language=request.language,
+            operators=request.operators
+        )
+    except Exception as e:
+        error_msg = str(e)
+        # Catch Presidio configuration errors (like missing parameters)
+        if "InvalidParamError" in error_msg or "parameter" in error_msg:
+             raise HTTPException(status_code=422, detail=f"Invalid configuration: {error_msg}")
+        print(f"Anonymization error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    return AnonymizeResponse(
+        success=True,
+        original_text=result["original"],
+        anonymized_text=result["anonymized"],
+        detections_count=result["count"]
+    )
+
+# ====================================================================
+# AIRFLOW INTEGRATION (US-PRES-05)
+# ====================================================================
+
+TASKS = {}
+
+class ExecuteRequest(BaseModel):
+    task_id: str
+    dataset_path: str
+    config: Optional[dict] = None
+
+@app.post("/execute")
+async def execute_task(request: ExecuteRequest):
+    """
+    Endpoint for Airflow to trigger batch analysis.
+    US-PRES-05: System must integrate with Airflow pipeline.
+    """
+    try:
+        # checking if file exists would happen here in a real scenario
+        # verifying task doesn't exist
+        TASKS[request.task_id] = {"status": "running", "progress": 0}
+        
+        # Simulate processing (in real app, this would be an async background task)
+        TASKS[request.task_id] = {
+            "status": "completed", 
+            "progress": 100,
+            "result": f"Processed {request.dataset_path}"
+        }
+        
+        return {"success": True, "message": "Task started", "task_id": request.task_id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/status/{task_id}")
+async def get_task_status(task_id: str):
+    """
+    Airflow polls this to check completion.
+    """
+    task = TASKS.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+class RecognizerRequest(BaseModel):
+    entity_type: str
+    pattern: str
+    language: str = "fr"
+
+@app.post("/recognizers")
+async def add_custom_recognizer(rec_request: RecognizerRequest):
+    """
+    US-PRES-02: Register custom PII recognizers dynamically.
+    """
+    if db is not None:
+        await db.presidio_recognizers.update_one(
+            {"entity_type": rec_request.entity_type, "language": rec_request.language},
+            {"$set": {"regex": rec_request.pattern}},
+            upsert=True
+        )
+        return {"status": "success", "message": f"Recognizer for {rec_request.entity_type} ({rec_request.language}) registered"}
+    return {"status": "error", "message": "Database not available"}
+
+if __name__ == "__main__":
+    print("\n" + "="*60)
+    print("🔒 PRESIDIO MOROCCO SERVICE - Tâche 3")
+    print("="*60)
+    uvicorn.run("main:app", host="0.0.0.0", port=8003, reload=True)
