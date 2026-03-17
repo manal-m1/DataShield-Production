@@ -1,4 +1,4 @@
-# 🛡️ DataSentinel - Intelligent Data Governance Platform
+# 🛡️ DataShield - Intelligent Data Governance Platform
 
 <div align="center">
 
@@ -50,7 +50,7 @@ This federated project develops a **complete sensitive data governance system** 
 ```mermaid
 graph TB
     subgraph "Frontend & Entry"
-        UI["DataSentinel Dashboard<br/>(Modern UI)"]
+        UI["DataShield Dashboard<br/>(Modern UI)"]
         Gateway["Nginx Gateway<br/>(Reverse Proxy)"]
     end
 
@@ -477,7 +477,7 @@ pytest tests/test_presidio.py -v
 
 ## 📜 License
 
-This project is developed as part of the **Federated Project 2024-2025** - Data Governance & Privacy.
+This project is developed as part of the **Federated Project 2025-2026** - Data Governance & Privacy.
 
 **École Nationale Supérieure d'Informatique et d'Analyse des Systèmes (ENSIAS)**
 
@@ -487,6 +487,20 @@ This project is developed as part of the **Federated Project 2024-2025** - Data 
 
 **Made with ❤️ for Data Governance**
 
-[⬆ Back to top](#️-datasentinel---intelligent-data-governance-platform)
+[⬆ Back to top](#️-datashield---intelligent-data-governance-platform)
 
 </div>
+## 📖 Citation
+
+If you use this work, please cite:
+
+```bibtex
+@inproceedings{EthiMask,
+  author    = {Manal Gasmi and Karim Ba{\"i}na},
+  title     = {EthiMask: A Context-Aware Data Masking Framework for Privacy-Preserving Analytics Using Dynamic Trust Scoring and Differential Privacy},
+  booktitle = {Proceedings of The 2026 International Conference on Advances in Computing Research (ACR’26), Amsterdam, The Netherlands, July 13--15, 2026},
+  series    = {Lecture Notes in Networks and Systems},
+  publisher = {Springer},
+  year      = {2026},
+  note      = {Accepted for publication}
+}
