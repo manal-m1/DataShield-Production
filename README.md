@@ -485,7 +485,7 @@ This project is developed as part of the **Federated Project 2025-2026** - Data 
 
 <div align="center">
 
-**Made with ❤️ for Data Governance**
+
 
 [⬆ Back to top](#️-datashield---intelligent-data-governance-platform)
 
@@ -501,6 +501,13 @@ If you use this work, please cite:
   booktitle = {Proceedings of The 2026 International Conference on Advances in Computing Research (ACR’26), Amsterdam, The Netherlands, July 13--15, 2026},
   series    = {Lecture Notes in Networks and Systems},
   publisher = {Springer},
-  year      = {2026},
-  note      = {Accepted for publication}
+  year      = {2026}
 }
+@inproceedings{GradPriv,
+  author    = {Manal Gasmi and Nassima Ait Mansour and Karim Ba{\"i}na and Hanae Sbai },
+  title     = {GradPriv: A Gradient based Decision-Aware Fine-Grained Framework for Privacy–Utility Trade-off Optimization for Machine Learning},
+    booktitle = {2026 6th International Conference on Innovative Research in Applied Science, Engineering and Technology (IRASET), May 14--15, 2026, Fez, Morocco},
+  year      = {2026}
+
+}
+
