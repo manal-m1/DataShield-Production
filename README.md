@@ -506,7 +506,7 @@ If you use this work, please cite:
 @inproceedings{GradPriv,
   author    = {Manal Gasmi and Nassima Ait Mansour and Karim Ba{\"i}na and Hanae Sbai },
   title     = {GradPriv: A Gradient based Decision-Aware Fine-Grained Framework for Privacy–Utility Trade-off Optimization for Machine Learning},
-    booktitle = {2026 6th International Conference on Innovative Research in Applied Science, Engineering and Technology (IRASET), May 14--15, 2026, Fez, Morocco},
+  booktitle = {2026 6th International Conference on Innovative Research in Applied Science, Engineering and Technology (IRASET), May 14--15, 2026, Fez, Morocco},
   year      = {2026}
 
 }
