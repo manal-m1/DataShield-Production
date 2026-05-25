@@ -495,13 +495,19 @@ This project is developed as part of the **Federated Project 2025-2026** - Data 
 If you use this work, please cite:
 
 ```bibtex
-@inproceedings{EthiMask,
-  author    = {Manal Gasmi and Karim Ba{\"i}na},
-  title     = {EthiMask: A Context-Aware Data Masking Framework for Privacy-Preserving Analytics Using Dynamic Trust Scoring and Differential Privacy},
-  booktitle = {Proceedings of The 2026 International Conference on Advances in Computing Research (ACR’26), Amsterdam, The Netherlands, July 13--15, 2026},
-  series    = {Lecture Notes in Networks and Systems},
-  publisher = {Springer},
-  year      = {2026}
+@InProceedings{10.1007/978-3-032-23883-2_18,
+author="Gasmi Manal
+and Ba{\"i}na, Karim",
+editor="Daimi, Kevin
+and Alsadoon, Abeer",
+title="EthiMask: A Context-Aware Data Masking Framework for Privacy-Preserving Analytics Using Dynamic Trust Scoring and Differential Privacy",
+booktitle="Proceedings of the Fourth International Conference on Advances in Computing Research (ACR'26)",
+year="2026",
+publisher="Springer Nature Switzerland",
+address="Cham",
+pages="208--221",
+abstract="Background. The growing use of cloud analytics and AI solutions has increased the risks associated with privacy in organizations that deal with sensitive information. The conventional methods that are based on static access control and/or uniform anonymization are not adaptable to different roles, purposes of access, sensitivity, and trust levels, thereby either limiting analytics unnecessarily or not providing adequate protection for sensitive information.",
+isbn="978-3-032-23883-2"
 }
 @inproceedings{GradPriv,
   author    = {Manal Gasmi and Nassima Ait Mansour and Karim Ba{\"i}na and Hanae Sbai },
