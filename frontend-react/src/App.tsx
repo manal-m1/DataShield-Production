@@ -17,6 +17,7 @@ import UsersPage from './pages/UsersPage';
 import AuditLogsPage from './pages/AuditLogsPage';
 import SettingsPage from './pages/SettingsPage';
 import DiscoveryPage from './pages/DiscoveryPage';
+import ImmuneGuardPage from './pages/ImmuneGuardPage';
 import LandingPage from './pages/LandingPage';
 import { RoleThemeProvider } from './context/RoleThemeContext';
 import { ToastProvider } from './context/ToastContext';
@@ -98,6 +99,14 @@ function App() {
                           element={
                             <RoleGuard allowedRoles={['admin', 'steward', 'annotator']}>
                               <DiscoveryPage />
+                            </RoleGuard>
+                          }
+                        />
+                        <Route
+                          path="/immuneguard"
+                          element={
+                            <RoleGuard allowedRoles={['admin', 'steward', 'annotator']}>
+                              <ImmuneGuardPage />
                             </RoleGuard>
                           }
                         />

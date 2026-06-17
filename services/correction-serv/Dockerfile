@@ -30,12 +30,10 @@ COPY requirements.txt .
 
 # CRITICAL: Install CPU-only PyTorch FIRST (before requirements.txt)
 # This prevents downloading 1.5GB+ of NVIDIA CUDA drivers
-RUN pip install --no-cache-dir \
-    torch>=2.0.0 \
-    --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu "torch>=2.0.0"
 
 # Install remaining dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --default-timeout=100 --no-cache-dir -r requirements.txt
 
 # -------------------------------
 # Application code

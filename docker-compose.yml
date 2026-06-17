@@ -26,6 +26,7 @@ services:
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=False
       - AIRFLOW__WEBSERVER__RBAC=True
       - _AIRFLOW_DB_UPGRADE=True
       - _AIRFLOW_WWW_USER_CREATE=True
@@ -36,6 +37,7 @@ services:
       - "8081:8080"
     volumes:
       - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/config:/opt/airflow/config
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/datasets:/opt/airflow/datasets
     command: standalone
@@ -198,6 +200,24 @@ services:
       - mongo
     networks:
       - datagov-network
+    restart: unless-stopped
+
+  # SERVICE 10: ImmuneGuard Score A (Port 8010)
+  immuneguard-service:
+    build: ./services/immuneguard-serv
+    container_name: immuneguard-service
+    env_file:
+      - .env
+    environment:
+      - CLEANING_SERVICE_URL=http://cleaning-service:8004
+    ports:
+      - "8010:8010"
+    depends_on:
+      - mongo
+    networks:
+      - datagov-network
+    volumes:
+      - ./services/common:/common
     restart: unless-stopped
 
   # MODERN FRONTEND: DataGov (Port 3000)

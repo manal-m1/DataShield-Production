@@ -1,4 +1,4 @@
-# 🛡️ DataShield - Intelligent Data Governance Platform
+# 🛡️ DataSentinel - Intelligent Data Governance Platform
 
 <div align="center">
 
@@ -50,7 +50,7 @@ This federated project develops a **complete sensitive data governance system** 
 ```mermaid
 graph TB
     subgraph "Frontend & Entry"
-        UI["DataShield Dashboard<br/>(Modern UI)"]
+        UI["DataSentinel Dashboard<br/>(Modern UI)"]
         Gateway["Nginx Gateway<br/>(Reverse Proxy)"]
     end
 
@@ -477,7 +477,7 @@ pytest tests/test_presidio.py -v
 
 ## 📜 License
 
-This project is developed as part of the **Federated Project 2025-2026** - Data Governance & Privacy.
+This project is developed as part of the **Federated Project 2024-2025** - Data Governance & Privacy.
 
 **École Nationale Supérieure d'Informatique et d'Analyse des Systèmes (ENSIAS)**
 
@@ -485,35 +485,8 @@ This project is developed as part of the **Federated Project 2025-2026** - Data 
 
 <div align="center">
 
+**Made with ❤️ for Data Governance**
 
-
-[⬆ Back to top](#️-datashield---intelligent-data-governance-platform)
+[⬆ Back to top](#️-datasentinel---intelligent-data-governance-platform)
 
 </div>
-## 📖 Citation
-
-If you use this work, please cite:
-
-```bibtex
-@InProceedings{10.1007/978-3-032-23883-2_18,
-author="Gasmi Manal
-and Ba{\"i}na, Karim",
-editor="Daimi, Kevin
-and Alsadoon, Abeer",
-title="EthiMask: A Context-Aware Data Masking Framework for Privacy-Preserving Analytics Using Dynamic Trust Scoring and Differential Privacy",
-booktitle="Proceedings of the Fourth International Conference on Advances in Computing Research (ACR'26)",
-year="2026",
-publisher="Springer Nature Switzerland",
-address="Cham",
-pages="208--221",
-abstract="Background. The growing use of cloud analytics and AI solutions has increased the risks associated with privacy in organizations that deal with sensitive information. The conventional methods that are based on static access control and/or uniform anonymization are not adaptable to different roles, purposes of access, sensitivity, and trust levels, thereby either limiting analytics unnecessarily or not providing adequate protection for sensitive information.",
-isbn="978-3-032-23883-2"
-}
-@inproceedings{GradPriv,
-  author    = {Manal Gasmi and Nassima Ait Mansour and Karim Ba{\"i}na and Hanae Sbai },
-  title     = {GradPriv: A Gradient based Decision-Aware Fine-Grained Framework for Privacy–Utility Trade-off Optimization for Machine Learning},
-  booktitle = {2026 6th International Conference on Innovative Research in Applied Science, Engineering and Technology (IRASET), May 14--15, 2026, Fez, Morocco},
-  year      = {2026}
-
-}
-
