@@ -1,0 +1,69 @@
+[
+  {
+    "ref_entry": "last_name",
+    "nom_colonne (FR)": "nom",
+    "column_name (EN)": "last_name",
+    "signal (FR)": "S_pii",
+    "domaine_mit (FR)": "2. Vie privée & Sécurité",
+    "source_reglementaire (FR/EN)": "RGPD Art.4(1) / Loi 09-08 Art.1",
+    "p": 0.8,
+    "xai_template_fr": "Donnée personnelle identifiante : {{col}}. Risque de re-identification. RGPD Art.4(1) / Loi 09-08 Art.1. Severite AIID → {{sev_privacy}}/5.",
+    "sev_privacy": 0.7
+  },
+  {
+    "ref_entry": "age",
+    "nom_colonne (FR)": "age",
+    "column_name (EN)": "age",
+    "signal (FR)": "S_prot",
+    "domaine_mit (FR)": "1. Discrimination et Toxicité",
+    "source_reglementaire (FR/EN)": "RGPD Art.9(1) / Loi 09-08 Art.21",
+    "p": 0.7,
+    "xai_template_fr": "Attribut protege : {{col}}. Risque discrimination algorithmique — MIT Dom.1. RGPD Art.9(1) / Loi 09-08 Art.21. Severite AIID → {{sev_discrimination}}/5.",
+    "sev_discrimination": 0.6
+  },
+  {
+    "ref_entry": "gender",
+    "nom_colonne (FR)": "genre",
+    "column_name (EN)": "gender",
+    "signal (FR)": "S_prot",
+    "domaine_mit (FR)": "1. Discrimination et Toxicité",
+    "source_reglementaire (FR/EN)": "RGPD Art.9(1) / Loi 09-08 Art.21",
+    "p": 0.9,
+    "xai_template_fr": "Attribut protege : {{col}}. Risque discrimination algorithmique — MIT Dom.1. RGPD Art.9(1) / Loi 09-08 Art.21. Severite AIID → {{sev_discrimination}}/5.",
+    "sev_discrimination": 0.9
+  },
+  {
+    "ref_entry": "city",
+    "nom_colonne (FR)": "ville",
+    "column_name (EN)": "city",
+    "signal (FR)": "S_pii",
+    "domaine_mit (FR)": "2. Vie privée & Sécurité",
+    "source_reglementaire (FR/EN)": "RGPD Art.4(1) / Loi 09-08 Art.1",
+    "p": 0.6,
+    "xai_template_fr": "Donnée personnelle identifiante : {{col}}. Risque de re-identification. RGPD Art.4(1) / Loi 09-08 Art.1. Severite AIID → {{sev_privacy}}/5.",
+    "sev_privacy": 0.5
+  },
+  {
+    "ref_entry": "hr_score",
+    "nom_colonne (FR)": "score_rh",
+    "column_name (EN)": "hr_score",
+    "signal (FR)": "S_dec",
+    "domaine_mit (FR)": "1. Discrimination et Toxicité",
+    "source_reglementaire (FR/EN)": "RGPD Art.22(1) / Loi 09-08 Art.24 / AI Act Art.9",
+    "p": 0.8,
+    "xai_template_fr": "Variable decisionnelle : {{col}}. RGPD Art.22(1) / Loi 09-08 Art.24 / AI Act Art.9. Severite AIID → {{sev_discrimination}}/5.",
+    "sev_discrimination": 1.0
+  },
+  {
+    "ref_entry": "decision",
+    "nom_colonne (FR)": "decision",
+    "column_name (EN)": "decision",
+    "signal (FR)": "S_dec",
+    "domaine_mit (FR)": "1. Discrimination et Toxicité",
+    "source_reglementaire (FR/EN)": "RGPD Art.22(1) / Loi 09-08 Art.24 / AI Act Art.9",
+    "p": 0.7,
+    "xai_template_fr": "Variable decisionnelle : {{col}}. RGPD Art.22(1) / Loi 09-08 Art.24 / AI Act Art.9. Severite AIID → {{sev_discrimination}}/5.",
+    "sev_discrimination": 0.8
+  }
+]
+

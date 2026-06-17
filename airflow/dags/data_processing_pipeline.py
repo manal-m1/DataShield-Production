@@ -538,7 +538,7 @@ check_presidio = PythonOperator(
 upload = PythonOperator(
     task_id='upload_dataset',
     python_callable=upload_dataset,
-    op_kwargs={'file_path': '/opt/airflow/datasets/test_data/MASTER_DATAGOV8TEST.csv'},
+    op_kwargs={'file_path': '/opt/airflow/datasets/test_data/MASTER_DATAGOV_TEST.csv'},
     dag=dag,
 )
 
