@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Upload,
@@ -26,7 +26,6 @@ import { useToast } from '../context/ToastContext';
 import ExportsList from '../components/ExportsList';
 import LineageVisualizer from '../components/ui/LineageVisualizer';
 
-// Roles that can see actual data preview
 const ROLES_CAN_VIEW_DATA = ['admin', 'steward'];
 const ROLES_CAN_DELETE = ['admin', 'steward'];
 
@@ -50,9 +49,11 @@ const DataPipelinePage = () => {
     const [datasetPreview, setDatasetPreview] = useState<any>(null);
     const [isLoadingPreview, setIsLoadingPreview] = useState(false);
     const [uploadedFilename, setUploadedFilename] = useState('');
+    const [lastUploadedDatasetId, setLastUploadedDatasetId] = useState<string | null>(null);
     const [activeModalTab, setActiveModalTab] = useState<'preview' | 'lineage'>('preview');
 
     const [isDragging, setIsDragging] = useState(false);
+    const autoUploadKeyRef = useRef<string | null>(null);
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -87,7 +88,7 @@ const DataPipelinePage = () => {
         setIsLoading(true);
         try {
             const resp = await apiClient.get('/cleaning/datasets');
-            setDatasets(resp.data.datasets || resp.data); // Support both formats
+            setDatasets(resp.data.datasets || resp.data);
         } catch (err) {
             console.error('Failed to fetch datasets', err);
         } finally {
@@ -100,7 +101,7 @@ const DataPipelinePage = () => {
     }, []);
 
     const handleDeleteDataset = async (datasetId: string, e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent row click
+        e.stopPropagation();
         if (!confirm('Are you sure you want to delete this dataset? This action cannot be undone.')) {
             return;
         }
@@ -114,7 +115,7 @@ const DataPipelinePage = () => {
         }
     };
 
-    const handleUpload = async () => {
+    const handleUpload = useCallback(async () => {
         if (!file) return;
         setStatus('uploading');
         setProgress(0);
@@ -131,37 +132,44 @@ const DataPipelinePage = () => {
                     setProgress(percentCompleted);
                 }
             });
+            const newId = response.data.dataset_id as string;
+            setLastUploadedDatasetId(newId || null);
 
             setStatus('processing');
 
-            // Mandatory Task: Trigger Airflow Pipeline
             try {
                 const trigResp = await apiClient.post('/cleaning/trigger-pipeline', {
-                    dataset_id: response.data.dataset_id
+                    dataset_id: newId
                 });
                 if (trigResp.data.success) {
-                    addToast('Pipeline triggered successfully! Redirecting...', 'success');
-                    setTimeout(() => navigate('/dashboard'), 1500);
+                    addToast('Pipeline déclenché avec succès.', 'success');
                 }
             } catch (triggerErr) {
-                console.error("Failed to trigger pipeline", triggerErr);
+                console.error('Failed to trigger pipeline', triggerErr);
                 addToast('Warning: Uploaded but Pipeline start failed', 'error');
             }
 
             setTimeout(() => {
                 setStatus('success');
                 fetchDatasets();
-                // Show Atlas registration notification
-                addToast(`✅ Dataset registered in Apache Atlas (ID: ${response.data.dataset_id.substring(0, 8)}...)`, 'success');
-                addToast(`🚀 Airflow DAG Started: cleaning_pipeline_v1`, 'success');
+                addToast(`✅ Dataset enregistré dans Apache Atlas (ID: ${newId.substring(0, 8)}...)`, 'success');
+                addToast(`🚀 Airflow DAG Started: datagov_pipeline`, 'success');
             }, 1000);
-
         } catch (err) {
             console.error('Upload failed', err);
+            autoUploadKeyRef.current = null;
             setStatus('error');
             addToast('❌ Upload failed. Please try again.', 'error');
         }
-    };
+    }, [file, addToast]);
+
+    useEffect(() => {
+        if (!file || status !== 'idle') return;
+        const key = `${file.name}-${file.size}-${file.lastModified}`;
+        if (autoUploadKeyRef.current === key) return;
+        autoUploadKeyRef.current = key;
+        void handleUpload();
+    }, [file, status, handleUpload]);
 
     const handleDatasetClick = async (dataset: any) => {
         setSelectedDataset(dataset);
@@ -194,7 +202,6 @@ const DataPipelinePage = () => {
                 <p className="text-slate-400">Securely upload and register datasets into the DataGov ecosystem</p>
             </header>
 
-            {/* Upload Section */}
             {['admin', 'steward', 'annotator'].includes(userRole) ? (
                 <div
                     onDragOver={handleDragOver}
@@ -225,7 +232,7 @@ const DataPipelinePage = () => {
                                 className="hidden"
                                 accept=".csv,.json,.xlsx,.xls"
                                 onChange={(e) => setFile(e.target.files?.[0] || null)}
-                                onClick={(e) => e.stopPropagation()} // Prevent double trigger
+                                onClick={(e) => e.stopPropagation()}
                             />
                         </div>
                     ) : (
@@ -241,20 +248,19 @@ const DataPipelinePage = () => {
                                     </div>
                                 </div>
                                 {status === 'idle' && (
-                                    <button onClick={() => setFile(null)} className="p-2 hover:bg-white/10 rounded-full text-slate-400 transition-colors">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            autoUploadKeyRef.current = null;
+                                            setFile(null);
+                                        }}
+                                        className="p-2 hover:bg-white/10 rounded-full text-slate-400 transition-colors"
+                                        title="Retirer le fichier"
+                                    >
                                         <X size={20} />
                                     </button>
                                 )}
                             </div>
-
-                            {status === 'idle' && (
-                                <div className="flex justify-center">
-                                    <Button className="w-full max-w-sm" onClick={handleUpload}>
-                                        Begin High-Speed Ingestion
-                                        <ArrowRight size={18} />
-                                    </Button>
-                                </div>
-                            )}
 
                             {(status === 'uploading' || status === 'processing') && (
                                 <div className="max-w-md mx-auto space-y-4">
@@ -274,10 +280,36 @@ const DataPipelinePage = () => {
                                         <CheckCircle2 size={32} />
                                     </div>
                                     <h4 className="text-2xl font-bold text-white tracking-tight">Ingestion Complete</h4>
-                                    <p className="text-slate-400">File: <span className="text-brand-primary font-mono">{uploadedFilename}</span></p>
-                                    <div className="flex justify-center gap-4">
-                                        <Button variant="ghost" onClick={() => { setFile(null); setStatus('idle'); }}>Upload Another</Button>
-                                        <Button variant="primary" onClick={() => navigate('/pii')}>Scan for PII</Button>
+                                    <p className="text-slate-400">Fichier : <span className="text-brand-primary font-mono">{uploadedFilename}</span></p>
+                                    <p className="text-sm text-slate-500 max-w-md mx-auto">
+                                        Le jeu de données est enregistré. Renseignez la DataCard dans ImmuneGuard Score pour le calcul (vues Global, Détail, XAI).
+                                    </p>
+                                    <div className="flex flex-col sm:flex-row justify-center gap-3 flex-wrap">
+                                        <Button
+                                            variant="primary"
+                                            onClick={() => {
+                                                if (lastUploadedDatasetId) {
+                                                    navigate(`/immuneguard?dataset=${encodeURIComponent(lastUploadedDatasetId)}`);
+                                                } else {
+                                                    navigate('/immuneguard');
+                                                }
+                                            }}
+                                        >
+                                            <ShieldCheck size={18} />
+                                            Renseigner la DataCard — ImmuneGuard Score
+                                            <ArrowRight size={18} />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => {
+                                                autoUploadKeyRef.current = null;
+                                                setFile(null);
+                                                setStatus('idle');
+                                                setLastUploadedDatasetId(null);
+                                            }}
+                                        >
+                                            Autre fichier
+                                        </Button>
                                     </div>
                                 </motion.div>
                             )}
@@ -288,7 +320,15 @@ const DataPipelinePage = () => {
                                         <X size={32} />
                                     </div>
                                     <h4 className="text-2xl font-bold text-white">Ingestion Failed</h4>
-                                    <Button variant="ghost" onClick={() => setStatus('idle')}>Try Again</Button>
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => {
+                                            autoUploadKeyRef.current = null;
+                                            setStatus('idle');
+                                        }}
+                                    >
+                                        Try Again
+                                    </Button>
                                 </div>
                             )}
                         </div>
@@ -304,7 +344,6 @@ const DataPipelinePage = () => {
                 </div>
             )}
 
-            {/* Recent Uploads Table */}
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
@@ -322,7 +361,7 @@ const DataPipelinePage = () => {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <button onClick={fetchDatasets} className="p-2 bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors">
+                        <button type="button" onClick={fetchDatasets} className="p-2 bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors">
                             <RefreshCw size={18} className={isLoading ? 'animate-spin' : ''} />
                         </button>
                     </div>
@@ -364,6 +403,7 @@ const DataPipelinePage = () => {
                                             <Eye size={16} className="text-slate-500 group-hover:text-brand-primary transition-colors" />
                                             {canDelete && (
                                                 <button
+                                                    type="button"
                                                     onClick={(e) => handleDeleteDataset(d.id, e)}
                                                     className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors"
                                                     title="Delete dataset"
@@ -380,10 +420,8 @@ const DataPipelinePage = () => {
                 </div>
             </div>
 
-            {/* Exports Hub Section */}
             <ExportsList />
 
-            {/* Dataset Detail Modal */}
             <AnimatePresence>
                 {selectedDataset && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => { setSelectedDataset(null); setDatasetPreview(null); }}>
@@ -393,10 +431,10 @@ const DataPipelinePage = () => {
                                     <h3 className="text-2xl font-bold text-white mb-1">{selectedDataset.name || 'Dataset Details'}</h3>
                                     <div className="flex items-center gap-2">
                                         <code className="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">{selectedDataset.id}</code>
-                                        <button onClick={() => copyToClipboard(selectedDataset.id)} className="text-slate-500 hover:text-brand-primary transition-colors"><Copy size={14} /></button>
+                                        <button type="button" onClick={() => copyToClipboard(selectedDataset.id)} className="text-slate-500 hover:text-brand-primary transition-colors"><Copy size={14} /></button>
                                     </div>
                                 </div>
-                                <button onClick={() => { setSelectedDataset(null); setDatasetPreview(null); }} className="p-2 hover:bg-white/10 rounded-full transition-colors"><X size={20} className="text-slate-400" /></button>
+                                <button type="button" onClick={() => { setSelectedDataset(null); setDatasetPreview(null); }} className="p-2 hover:bg-white/10 rounded-full transition-colors"><X size={20} className="text-slate-400" /></button>
                             </div>
 
                             <div className="grid grid-cols-3 gap-4 mb-6">
@@ -414,15 +452,16 @@ const DataPipelinePage = () => {
                                 </div>
                             </div>
 
-                            {/* Tab Switcher */}
                             <div className="flex bg-white/5 p-1 rounded-xl mb-6">
                                 <button
+                                    type="button"
                                     onClick={() => setActiveModalTab('preview')}
                                     className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${activeModalTab === 'preview' ? 'bg-brand-primary text-white' : 'text-slate-500'}`}
                                 >
                                     Data Preview
                                 </button>
                                 <button
+                                    type="button"
                                     onClick={() => setActiveModalTab('lineage')}
                                     className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${activeModalTab === 'lineage' ? 'bg-brand-primary text-white' : 'text-slate-500'}`}
                                 >
@@ -475,19 +514,18 @@ const DataPipelinePage = () => {
                                 </div>
                             )}
 
-                            {/* Quick Actions */}
-                            <div className="flex gap-3">
-                                <Button variant="primary" className="flex-1" onClick={() => { setSelectedDataset(null); navigate('/pii'); }}>
+                            <div className="flex gap-3 flex-wrap">
+                                <Button variant="primary" className="flex-1 min-w-[140px]" onClick={() => { setSelectedDataset(null); navigate(`/immuneguard?dataset=${encodeURIComponent(selectedDataset.id)}`); }}>
                                     <ShieldCheck size={16} />
-                                    Scan for PII
+                                    ImmuneGuard Score
                                 </Button>
                                 {canViewData && (
                                     <>
-                                        <Button variant="ghost" className="flex-1" onClick={() => { setSelectedDataset(null); navigate('/quality'); }}>
+                                        <Button variant="ghost" className="flex-1 min-w-[140px]" onClick={() => { setSelectedDataset(null); navigate('/quality'); }}>
                                             <ExternalLink size={16} />
                                             Quality Audit
                                         </Button>
-                                        <Button variant="ghost" className="flex-1" onClick={() => window.open(`/api/cleaning/datasets/${selectedDataset.id}/lineage`, '_blank')}>
+                                        <Button variant="ghost" className="flex-1 min-w-[140px]" onClick={() => window.open(`/api/cleaning/datasets/${selectedDataset.id}/lineage`, '_blank')}>
                                             <Activity size={16} />
                                             Lineage Graph
                                         </Button>
