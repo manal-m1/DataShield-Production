@@ -1,0 +1,301 @@
+nom,age,genre,ville,score_rh,decision
+Rajae Tadlaoui,38,F,Oujda,48,Rejected
+Salma Cherkaoui,55,F,Fès,43,Rejected
+Aksil Tazi,26,H,Meknès,47,Rejected
+Ahmed Ziani,55,H,El Jadida,83,Accepted
+Zakaria Naciri,21,H,Agadir,53,Rejected
+Anir Saidi,30,H,Meknès,85,Accepted
+Tariq Belkhouche,45,H,Marrakech,77,Accepted
+Sifaw Belkhouche,23,H,Béni Mellal,71,Accepted
+Itri Doukkali,26,H,Laâyoune,45,Rejected
+Ahmed Bouazza,25,H,Rabat,97,Accepted
+Zineb Lamrani,26,F,Oujda,47,Rejected
+Ahmed Achour,44,H,Agadir,68,Accepted
+Rajae Mekouar,38,F,Fès,18,Rejected
+Tanila Ouhammou,36,F,Agadir,44,Rejected
+Salma El Ouafi,56,F,Oujda,23,Rejected
+Mustapha El Guerrouj,24,H,Oujda,72,Accepted
+Abdelkader Benkirane,25,H,Meknès,66,Accepted
+Sifaw Bouazza,52,H,Mohammedia,69,Accepted
+Khalid Filali,29,H,Oujda,76,Accepted
+Ghilas Bennani,48,H,Taza,43,Rejected
+Itri Berrada,53,H,Khouribga,75,Accepted
+Tanila Lahlou,30,F,Agadir,44,Rejected
+Amina El Idrissi,45,F,Mohammedia,58,Rejected
+Karim Ameziane,56,H,Casablanca,91,Accepted
+Ghilas Naciri,38,H,Salé,59,Rejected
+Amine Ouhammou,50,H,Casablanca,86,Accepted
+Tanila El Khattabi,32,F,Settat,16,Rejected
+Massin Tazi,59,H,Meknès,65,Accepted
+Laila Kettani,55,F,Settat,31,Rejected
+Ayoub Tadlaoui,28,H,Nador,92,Accepted
+Mehdi Bouazza,57,H,Fès,40,Rejected
+Ayoub Ziani,55,H,Tanger,87,Accepted
+Hicham Fassi Fihri,37,H,Settat,53,Rejected
+Ahmed Filali,33,H,Tétouan,77,Accepted
+Ayoub El Idrissi,49,H,Marrakech,44,Rejected
+Abdelkader Soussi,22,H,Taza,42,Rejected
+Hassan El Idrissi,21,H,Fès,67,Accepted
+Idir Cherkaoui,23,H,Salé,62,Accepted
+Anir Riffi,52,H,Meknès,84,Accepted
+Saïd Doukkali,57,H,Khouribga,44,Rejected
+Youssef Benjelloun,27,H,Marrakech,74,Accepted
+Khadija El Amrani,47,F,Béni Mellal,18,Rejected
+Ayoub El Ouafi,27,H,Rabat,99,Accepted
+Abdelkader Jabri,33,H,Meknès,97,Accepted
+Ayoub Sqalli,32,H,Kénitra,44,Rejected
+Sifaw Doukkali,49,H,Laâyoune,99,Accepted
+Khalid Cherkaoui,21,H,Fès,70,Accepted
+Ayoub Benjelloun,52,H,Khouribga,42,Rejected
+Adil El Guerrouj,45,H,Casablanca,58,Rejected
+Mustapha El Khattabi,48,H,Laâyoune,66,Accepted
+Sofia Ziani,39,F,Meknès,26,Rejected
+Adil El Mansouri,24,H,Rabat,89,Accepted
+Ayyur Mekouar,31,H,Rabat,48,Rejected
+Zakaria Ziani,25,H,Errachidia,89,Accepted
+Ismail El Fassi,57,H,Oujda,81,Accepted
+Amazigh Bennani,47,H,Taza,86,Accepted
+Karim Achour,41,H,Oujda,81,Accepted
+Nawal Saidi,40,F,Béni Mellal,41,Rejected
+Ismail Sqalli,57,H,Marrakech,63,Accepted
+Saïd Riffi,29,H,Nador,97,Accepted
+Hassan Ameziane,31,H,Béni Mellal,64,Accepted
+Massin Naciri,54,H,Casablanca,68,Accepted
+Saïd Hajji,29,H,Kénitra,95,Accepted
+Massin Ouhammou,30,H,Kénitra,98,Accepted
+Zakaria Bouazza,34,H,Kénitra,98,Accepted
+Sifaw Bouzid,26,H,El Jadida,64,Accepted
+Tariq Tadlaoui,29,H,Kénitra,64,Accepted
+Meriem Ameziane,48,F,Laâyoune,20,Rejected
+Amine Benali,30,H,Laâyoune,83,Accepted
+Omar Benomar,30,H,El Jadida,82,Accepted
+Ismail El Mansouri,23,H,Nador,95,Accepted
+Salma Chraibi,43,F,Laâyoune,49,Rejected
+Youssef El Khattabi,31,H,Agadir,48,Rejected
+Zakaria Cherkaoui,42,H,El Jadida,81,Accepted
+Khalid El Mansouri,27,H,Mohammedia,95,Accepted
+Massin El Idrissi,50,H,Nador,62,Accepted
+Itri Ameziane,33,H,Mohammedia,47,Rejected
+Tamzin Hajji,38,F,Nador,26,Rejected
+Saïd Kettani,42,H,Casablanca,74,Accepted
+Sifaw El Idrissi,37,H,Rabat,65,Accepted
+Tiziri Filali,41,F,El Jadida,48,Rejected
+Rajae Ouazzani,33,F,Kénitra,23,Rejected
+Aksil Ziani,55,H,Meknès,86,Accepted
+Adil Benjelloun,42,H,Errachidia,54,Rejected
+Khadija Moussaoui,53,F,Tétouan,15,Rejected
+Tariq Benali,39,H,Laâyoune,88,Accepted
+Amine Sqalli,45,H,Agadir,41,Rejected
+Abdelkader Ouhammou,21,H,Tétouan,59,Rejected
+Youssef Bennani,59,H,Salé,69,Accepted
+Amina Ouazzani,34,F,Settat,58,Rejected
+Hicham Lamrani,39,H,Settat,86,Accepted
+Idir Saidi,36,H,Tétouan,74,Accepted
+Hamza Fassi Fihri,23,H,Oujda,67,Accepted
+Mohammed Chraibi,57,H,Meknès,74,Accepted
+Khalid Bouazza,36,H,Tanger,64,Accepted
+Aksil Jabri,27,H,El Jadida,92,Accepted
+Anir Bouzid,54,H,Béni Mellal,54,Rejected
+Sifaw Moussaoui,50,H,Tanger,55,Rejected
+Nabil El Amrani,53,H,El Jadida,69,Accepted
+Zakaria Bennani,51,H,Béni Mellal,62,Accepted
+Abdelkader Tadlaoui,38,H,Settat,49,Rejected
+Rachid Bouzid,25,H,Tétouan,57,Rejected
+Mustapha El Khattabi,55,H,Fès,52,Rejected
+Ahmed Ait Taleb,30,H,Meknès,99,Accepted
+Tariq Achour,55,H,Béni Mellal,96,Accepted
+Sifaw Tadlaoui,45,H,Taza,86,Accepted
+Mehdi Cherkaoui,57,H,Mohammedia,88,Accepted
+Idir Cherkaoui,45,H,El Jadida,47,Rejected
+Omar Bouazza,38,H,El Jadida,42,Rejected
+Meriem Moussaoui,46,F,Agadir,57,Rejected
+Houda Ait Benhaddou,22,F,Mohammedia,41,Rejected
+Mustapha Bouzid,48,H,Tanger,79,Accepted
+Sifaw Lahlou,45,H,Salé,89,Accepted
+Rachid Riffi,45,H,Kénitra,99,Accepted
+Tariq Moussaoui,51,H,Casablanca,96,Accepted
+Tariq El Amrani,25,H,Rabat,96,Accepted
+Aicha El Amrani,22,F,Errachidia,16,Rejected
+Hassan Naciri,28,H,Taza,55,Rejected
+Saïd Saidi,44,H,Agadir,53,Rejected
+Tariq Benali,40,H,Marrakech,44,Rejected
+Hassan Riffi,57,H,Mohammedia,46,Rejected
+Aksil Filali,36,H,Marrakech,78,Accepted
+Hassan Ameziane,28,H,Taza,42,Rejected
+Ghilas Cherkaoui,48,H,Nador,68,Accepted
+Saïd El Idrissi,52,H,Marrakech,78,Accepted
+Zakaria Cherkaoui,30,H,El Jadida,83,Accepted
+Anir Ziani,51,H,Béni Mellal,85,Accepted
+Tamzin Ait Benhaddou,26,F,Kénitra,18,Rejected
+Tariq Filali,57,H,Errachidia,55,Rejected
+Mustapha Ouazzani,52,H,Salé,87,Accepted
+Amazigh Doukkali,37,H,Salé,42,Rejected
+Hamza Saidi,54,H,Meknès,65,Accepted
+Itri Benjelloun,52,H,Laâyoune,68,Accepted
+Houda Ait Benhaddou,52,F,Béni Mellal,29,Rejected
+Idir Berrada,35,H,Mohammedia,74,Accepted
+Khalid Soussi,58,H,Nador,53,Rejected
+Hamza Hajji,56,H,Salé,88,Accepted
+Massin El Baz,37,H,Oujda,95,Accepted
+Ayoub Benjelloun,55,H,Agadir,89,Accepted
+Hicham Saidi,38,H,Taza,43,Rejected
+Laila Lamrani,39,F,Oujda,23,Rejected
+Imane Soussi,55,F,Tanger,47,Rejected
+Abdelkader Sefrioui,39,H,Tanger,58,Rejected
+Anir Bennani,57,H,Tétouan,54,Rejected
+Tamzin Saidi,32,F,Rabat,61,Accepted
+Karim Marrakchi,46,H,Khouribga,76,Accepted
+Ayoub Hajji,57,H,Tétouan,60,Accepted
+Hicham El Ouafi,47,H,Errachidia,76,Accepted
+Souad Lahlou,45,F,Béni Mellal,53,Rejected
+Itri Mekouar,40,H,Taza,89,Accepted
+Amine El Amrani,27,H,Meknès,83,Accepted
+Abdelkader El Baz,26,H,Agadir,92,Accepted
+Omar Kettani,31,H,Casablanca,60,Accepted
+Mohammed Achour,51,H,Tétouan,55,Rejected
+Saïd Belkhouche,39,H,Béni Mellal,59,Rejected
+Salma Belkhouche,58,F,Meknès,24,Rejected
+Amazigh Sqalli,30,H,Kénitra,82,Accepted
+Khalid Filali,40,H,Errachidia,73,Accepted
+Sifaw Cherkaoui,50,H,Tétouan,54,Rejected
+Ghilas Saidi,55,H,Khouribga,66,Accepted
+Lina Hajji,48,F,Salé,34,Rejected
+Youssef Naciri,35,H,Taza,57,Rejected
+Hassan Marrakchi,38,H,Taza,43,Rejected
+Rachid Tadlaoui,49,H,Kénitra,75,Accepted
+Saïd Benhima,26,H,Khouribga,100,Accepted
+Adil Marrakchi,27,H,Agadir,77,Accepted
+Souad Ameziane,39,F,Mohammedia,62,Accepted
+Hajar Benali,41,F,Kénitra,26,Rejected
+Ghilas Fassi Fihri,53,H,Casablanca,80,Accepted
+Saïd Fassi Fihri,33,H,Settat,83,Accepted
+Nabil Mekouar,24,H,Meknès,67,Accepted
+Sifaw Hajji,49,H,Khouribga,75,Accepted
+Yasmine Lamrani,36,F,Agadir,46,Rejected
+Ayyur El Baz,26,H,Oujda,43,Rejected
+Mehdi Cherkaoui,30,H,Khouribga,62,Accepted
+Tiziri Kettani,38,F,El Jadida,56,Rejected
+Amine Benomar,56,H,Tanger,82,Accepted
+Mustapha Ziani,53,H,Tanger,64,Accepted
+Amine Ziani,42,H,Settat,90,Accepted
+Sifaw El Khattabi,40,H,Taza,73,Accepted
+Amazigh Sqalli,55,H,Khouribga,60,Accepted
+Amazigh Naciri,55,H,Mohammedia,84,Accepted
+Adil Ameziane,36,H,Taza,66,Accepted
+Adil Ouhammou,47,H,Rabat,66,Accepted
+Mustapha Hajji,45,H,Tanger,49,Rejected
+Laila El Khattabi,58,F,Salé,34,Rejected
+Omar Doukkali,50,H,Casablanca,64,Accepted
+Idir Fassi Fihri,30,H,Fès,51,Rejected
+Zakaria Moussaoui,46,H,Fès,88,Accepted
+Houda El Ouafi,52,F,Laâyoune,49,Rejected
+Ayyur Lahlou,39,H,Oujda,70,Accepted
+Amina El Amrani,27,F,Béni Mellal,30,Rejected
+Hamza Naciri,41,H,Rabat,94,Accepted
+Ahmed Ouhammou,30,H,Oujda,54,Rejected
+Ghilas Achour,32,H,Agadir,59,Rejected
+Ayoub Jabri,36,H,Khouribga,94,Accepted
+Anir Saidi,37,H,Béni Mellal,85,Accepted
+Nadia Kettani,39,F,Laâyoune,24,Rejected
+Itri Fassi Fihri,58,H,Tétouan,91,Accepted
+Mehdi Tadlaoui,50,H,Tétouan,69,Accepted
+Amazigh Benomar,36,H,Mohammedia,98,Accepted
+Salma Chraibi,39,F,Casablanca,18,Rejected
+Hicham Lyazidi,57,H,Rabat,75,Accepted
+Abdelkader El Mansouri,35,H,Errachidia,66,Accepted
+Samira Bennani,37,F,Tanger,41,Rejected
+Idir Marrakchi,23,H,Tétouan,75,Accepted
+Amine El Guerrouj,44,H,Tanger,73,Accepted
+Samira Bennani,47,F,Agadir,23,Rejected
+Omar Belkhouche,44,H,Settat,64,Accepted
+Saïd Naciri,51,H,Tétouan,55,Rejected
+Adil Chraibi,25,H,Tanger,56,Rejected
+Idir El Ouafi,46,H,Laâyoune,53,Rejected
+Hassan Alaoui,21,H,Kénitra,61,Accepted
+Mustapha El Idrissi,37,H,Taza,81,Accepted
+Nawal Lamrani,35,F,Khouribga,20,Rejected
+Ghilas Saidi,25,H,Béni Mellal,99,Accepted
+Adil Lamrani,28,H,Tanger,68,Accepted
+Rachid Benslimane,28,H,Marrakech,94,Accepted
+Amina Ameziane,44,F,Laâyoune,38,Rejected
+Hamza Lamrani,27,H,Khouribga,45,Rejected
+Youssef El Ouafi,44,H,Meknès,74,Accepted
+Ahmed Lamrani,27,H,Nador,86,Accepted
+Abdelkader Sefrioui,38,H,Meknès,93,Accepted
+Mustapha Lyazidi,34,H,Errachidia,52,Rejected
+Lina El Amrani,36,F,Tanger,18,Rejected
+Ghilas Benkirane,56,H,Meknès,57,Rejected
+Khalid Benkirane,42,H,Tanger,64,Accepted
+Ghilas El Amrani,29,H,Laâyoune,83,Accepted
+Itri Moussaoui,22,H,Tanger,78,Accepted
+Ayyur Ouazzani,41,H,Casablanca,78,Accepted
+Karim Lyazidi,47,H,Settat,42,Rejected
+Massin El Khattabi,44,H,Settat,95,Accepted
+Aksil El Amrani,35,H,Errachidia,44,Rejected
+Mohammed Ziani,22,H,Rabat,52,Rejected
+Abdelkader Riffi,27,H,Khouribga,91,Accepted
+Omar Ait Benhaddou,41,H,Errachidia,88,Accepted
+Hamza Benali,58,H,Laâyoune,77,Accepted
+Ayoub Fassi Fihri,54,H,Tétouan,86,Accepted
+Tariq Ouazzani,28,H,Laâyoune,82,Accepted
+Aksil Bouazza,35,H,El Jadida,75,Accepted
+Massin Filali,27,H,Salé,53,Rejected
+Ismail Benomar,44,H,Tanger,70,Accepted
+Rachid Berrada,26,H,Fès,53,Rejected
+Saïd El Idrissi,44,H,Tanger,95,Accepted
+Anir Benali,56,H,Salé,98,Accepted
+Ayoub Jabri,48,H,Rabat,61,Accepted
+Amazigh Benkirane,57,H,Settat,59,Rejected
+Mohammed Lyazidi,35,H,Marrakech,98,Accepted
+Zineb El Khattabi,38,F,Taza,15,Rejected
+Tamzin Mekouar,56,F,Casablanca,28,Rejected
+Sifaw Kettani,38,H,Tétouan,99,Accepted
+Karim Cherkaoui,30,H,Taza,52,Rejected
+Massin El Guerrouj,22,H,Fès,87,Accepted
+Souad Ait Ouahmane,50,F,Salé,22,Rejected
+Tanila Ameziane,41,F,Taza,62,Accepted
+Khadija Moussaoui,30,F,Agadir,63,Accepted
+Idir Chraibi,38,H,Béni Mellal,70,Accepted
+Karim Bouazza,49,H,El Jadida,98,Accepted
+Tiziri Ameziane,28,F,Nador,30,Rejected
+Ghilas El Mansouri,58,H,Khouribga,84,Accepted
+Mohammed Jabri,46,H,Errachidia,78,Accepted
+Zakaria El Mansouri,34,H,Tanger,85,Accepted
+Ismail Benslimane,28,H,Casablanca,53,Rejected
+Mehdi Ait Benhaddou,45,H,Laâyoune,65,Accepted
+Hamza Soussi,43,H,Fès,98,Accepted
+Lina Doukkali,50,F,Fès,30,Rejected
+Mohammed Jabri,47,H,Tétouan,75,Accepted
+Ayoub Bouzid,31,H,Errachidia,60,Accepted
+Amazigh El Mansouri,27,H,Oujda,89,Accepted
+Youssef Benhima,46,H,Tétouan,58,Rejected
+Meriem Benali,31,F,Fès,39,Rejected
+Hamza El Idrissi,33,H,Nador,69,Accepted
+Zakaria Mekouar,30,H,Kénitra,74,Accepted
+Tariq Naciri,25,H,Agadir,81,Accepted
+Sifaw Ziani,57,H,Taza,62,Accepted
+Amazigh Berrada,30,H,Béni Mellal,59,Rejected
+Sofia El Khattabi,40,F,Kénitra,31,Rejected
+Nabil Cherkaoui,25,H,Tétouan,63,Accepted
+Amine Sefrioui,44,H,Tétouan,72,Accepted
+Hassan Saidi,53,H,Mohammedia,96,Accepted
+Hassan Benali,33,H,Salé,71,Accepted
+Lina Riffi,24,F,Béni Mellal,44,Rejected
+Nabil Belkhouche,53,H,Agadir,46,Rejected
+Amazigh Tadlaoui,49,H,Settat,91,Accepted
+Tiziri Benslimane,39,F,Mohammedia,61,Accepted
+Mustapha Benhima,24,H,Salé,70,Accepted
+Itri Sqalli,45,H,Tétouan,88,Accepted
+Sifaw El Mansouri,58,H,Tanger,93,Accepted
+Yasmine Benslimane,46,F,Tanger,35,Rejected
+Hicham Tazi,45,H,Salé,98,Accepted
+Tanila Achour,48,F,Settat,28,Rejected
+Tariq Naciri,32,H,Meknès,63,Accepted
+Houda El Fassi,29,F,Tanger,35,Rejected
+Ghilas Doukkali,55,H,Settat,66,Accepted
+Omar Bennani,29,H,Errachidia,42,Rejected
+Itri Tadlaoui,31,H,Béni Mellal,76,Accepted
+Aksil Filali,36,H,Béni Mellal,95,Accepted
+Rachid Doukkali,49,H,Oujda,54,Rejected
+Mustapha Lahlou,33,H,Nador,87,Accepted
+Hajar Ameziane,39,F,Mohammedia,24,Rejected

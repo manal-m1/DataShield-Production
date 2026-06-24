@@ -12,7 +12,8 @@ import {
     FileSearch,
     LogOut,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    Shield
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import DynamicLogo from '../ui/DynamicLogo';
@@ -65,6 +66,7 @@ const Sidebar = () => {
         { id: 'pii', icon: ShieldAlert, label: 'PII Detection', path: '/pii', roles: ['admin', 'steward', 'annotator'] },
         { id: 'discovery', icon: FileSearch, label: 'Data Discovery', path: '/discovery', roles: ['admin', 'steward', 'annotator'] },
         { id: 'quality', icon: CheckCircle2, label: 'Quality Hub', path: '/quality', roles: ['admin', 'steward'] },
+        { id: 'immuneguard', icon: Shield, label: 'ImmuneGuard Score', path: '/immuneguard', roles: ['admin', 'steward', 'annotator'] },
         { id: 'tasks', icon: ClipboardList, label: 'Task Queue', path: '/tasks', roles: ['admin', 'steward', 'annotator', 'labeler'] },
         { id: 'users', icon: Users, label: 'User Control', path: '/users', roles: ['admin'] },
         { id: 'audit', icon: History, label: 'Audit Logs', path: '/audit', roles: ['admin', 'steward'] },
