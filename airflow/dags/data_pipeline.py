@@ -30,27 +30,39 @@ dag = DAG(
     schedule_interval=None,  # Triggered manually via upload
     start_date=days_ago(1),
     tags=['datagov'],
-    catchup=False
+    catchup=False,
+    is_paused_upon_creation=False
 )
 
 def ingest_and_clean(**context):
     """Call cleaning service to profile and clean data"""
-    conf = context['dag_run'].conf
+    conf = context['dag_run'].conf or {}
     dataset_id = conf.get('dataset_id')
     
     if not dataset_id:
-        raise ValueError("No dataset_id provided in DAG run configuration")
+        raise ValueError(
+            "No dataset_id provided in DAG run configuration. "
+            "Trigger with conf: {\"dataset_id\": \"...\"}"
+        )
     
     print(f"Starting pipeline for dataset: {dataset_id}")
     
-    # 1. Profile
-    resp = requests.post(f"{CLEANING_SERVICE_URL}/profile", json={"dataset_id": dataset_id})
+    # 1. Profile - cleaning-service returns an HTML report for this endpoint.
+    resp = requests.get(f"{CLEANING_SERVICE_URL}/profile/{dataset_id}", timeout=30)
     resp.raise_for_status()
-    profile = resp.json()
-    print(f"Profile generated: {profile['summary']}")
+    print(f"Profile generated: HTML report size={len(resp.text)} bytes")
     
     # 2. Clean
-    resp = requests.post(f"{CLEANING_SERVICE_URL}/clean", json={"dataset_id": dataset_id, "auto_clean": True})
+    resp = requests.post(
+        f"{CLEANING_SERVICE_URL}/clean/{dataset_id}",
+        params={
+            "remove_duplicates": True,
+            "remove_outliers": True,
+            "handle_missing": "mean",
+            "normalize": False,
+        },
+        timeout=30,
+    )
     resp.raise_for_status()
     clean_result = resp.json()
     print(f"Cleaning complete: {clean_result}")
@@ -58,23 +70,35 @@ def ingest_and_clean(**context):
     return dataset_id
 
 def analyze_pii(**context):
-    """Call taxonomy service to detect PII"""
+    """Run inconsistency detection on a sample from the cleaned dataset."""
     dataset_id = context['task_instance'].xcom_pull(task_ids='ingest_and_clean')
     
-    # Get data sample (or full data logic) - simplified here to generic analysis trigger
-    # In real flow, we'd pass data. For now, assuming services share DB/access
-    resp = requests.post(f"{TAXONOMY_SERVICE_URL}/analyze-dataset/{dataset_id}") 
-    # Note: Accessing by ID implies shared storage or service-to-service fetch.
-    # Current microservices might need data payload if not sharing DB directly.
-    # For this POC, we'll assume the /clean calls updated the shared state or we send specific column data.
-    
-    # Re-logic: Taxonomie-serv expects text. 
-    # Let's pivot: We will trigger a "Correction" scan which includes pattern detection
-    
-    resp = requests.post(f"{CORRECTION_SERVICE_URL}/detect/{dataset_id}")
+    if not dataset_id:
+        raise ValueError("No dataset_id received from ingest_and_clean")
+
+    resp = requests.get(
+        f"{CLEANING_SERVICE_URL}/dataset/{dataset_id}/json",
+        params={"sample": True},
+        timeout=30,
+    )
     resp.raise_for_status()
-    detections = resp.json()
-    print(f"Inconsistencies/PII candidates detected: {detections['total_inconsistencies']}")
+    rows = resp.json().get("data", [])
+
+    total_inconsistencies = 0
+    for row in rows:
+        detect_resp = requests.post(
+            f"{CORRECTION_SERVICE_URL}/detect",
+            json={
+                "row": {key: str(value) if value is not None else "" for key, value in row.items()},
+                "dataset_id": dataset_id,
+            },
+            timeout=30,
+        )
+        detect_resp.raise_for_status()
+        result = detect_resp.json()
+        total_inconsistencies += result.get("count", 0)
+
+    print(f"Inconsistencies detected on sample: {total_inconsistencies}")
     
     return dataset_id
 

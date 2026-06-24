@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks, Form
 from fastapi.responses import HTMLResponse, StreamingResponse
 import pandas as pd
 import io
@@ -109,7 +109,7 @@ async def delete_dataset(dataset_id: str):
     return {"status": "deleted", "id": dataset_id}
 
 @router.post("/upload")
-async def upload_dataset(file: UploadFile = File(...)):
+async def upload_dataset(file: UploadFile = File(...), datacard: str | None = Form(default=None)):
     """
     US-CLEAN-01: Upload CSV/Excel
     """
@@ -212,6 +212,14 @@ async def upload_dataset(file: UploadFile = File(...)):
         except Exception as e:
             print(f"⚠️ Ranger Automation Failed: {e}")
 
+        # DataCard (optional) comes from frontend as JSON string
+        datacard_payload: Dict[str, Any] | None = None
+        if datacard:
+            try:
+                datacard_payload = json.loads(datacard)
+            except Exception:
+                datacard_payload = None
+
         # Persistent metadata in MongoDB
         dataset_meta = {
             "dataset_id": dataset_id,
@@ -222,6 +230,7 @@ async def upload_dataset(file: UploadFile = File(...)):
             "file_path": file_path,
             "rows": len(df),
             "columns": len(df.columns),
+            "datacard": datacard_payload,
             "created_at": datetime.now().isoformat()
         }
         
@@ -238,7 +247,8 @@ async def upload_dataset(file: UploadFile = File(...)):
             "name": file.filename, 
             "status": "raw",
             "pii_tags": pii_tags,
-            "atlas_guid": atlas_guid
+            "atlas_guid": atlas_guid,
+            "datacard": datacard_payload,
         }
         print(f"✅ Ingestion Chain Completed for {dataset_id}")
         # Remove MongoDB _id for JSON serialization
@@ -271,7 +281,8 @@ async def get_dataset_json(dataset_id: str, sample: bool = False):
                         "name": doc["name"],
                         "status": doc["status"],
                         "pii_tags": doc.get("pii_tags", []),
-                        "atlas_guid": doc.get("atlas_guid")
+                        "atlas_guid": doc.get("atlas_guid"),
+                        "datacard": doc.get("datacard"),
                     }
                     print(f"✅ Reloaded {dataset_id} into cache")
                 except Exception as re:
@@ -294,6 +305,7 @@ async def get_dataset_json(dataset_id: str, sample: bool = False):
     return {
         "dataset_id": dataset_id,
         "filename": DATASETS[dataset_id]["name"],
+        "datacard": DATASETS[dataset_id].get("datacard"),
         "data": json_data
     }
 
