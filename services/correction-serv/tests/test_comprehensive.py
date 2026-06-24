@@ -23,7 +23,7 @@ from datetime import datetime
 
 def test_format_invalid_date():
     """Test detection of invalid date: 32/13/2024 (Section 8.3 example)"""
-   row = {"date_naissance": "32/13/2024"}
+    row = {"date_naissance": "32/13/2024"}
     # Should detect FORMAT inconsistency
     assert True  # Placeholder for actual test
 

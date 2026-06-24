@@ -15,10 +15,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
 
 # Install the rest of the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Download NLTK data
-RUN python -m nltk.downloader punkt stopwords
+RUN pip install --default-timeout=100 --no-cache-dir -r requirements.txt
 
 COPY . .
 
